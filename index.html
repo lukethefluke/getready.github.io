@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="">
+
+    <title>Get Ready</title>
+
+    <!-- Custom styles for this template -->
+    <link rel="stylesheet" type="text/css" href="styles.css" /> 
+  </head>
+
+
+
+<header class="display-header">
+	<div class="header-content">
+		<div class="service">Service</div>
+		<div class="time-now">Time Now</div>
+		<div class="header-time" id="datetime">/div>
+	</div>
+</header>
+
+<div class="destination">
+  <div class="dest-row">
+    <div class="logo">
+      
+      <div class="logo-img" id="editLogo">
+        <div id="logoText">T1</div>
+      </div>
+
+    </div>
+    <div class="dest-text">
+      <div class="dest-main"></div>
+      <div class="dest-via">via Car</div>
+    </div>
+  </div>
+</div>
+<div class="line">
+</div>
+<div class="tasks">
+  <div class="task-list">
+    <ul id="myList"></ul>
+  </div>
+  <div class="platform">
+    <div class="plat-text">Platform</div>
+    <div class="plat-num">5</div>
+  </div>
+</div>
+
+<div class="fill"></div>
+
+<div class="departure">
+  <div class="trans-info">
+    <div class="trans-type">One Car</div>
+    <div class="stop-type">No Stops</div>
+  </div>
+  <div class="departs-info">
+    <div class="departs-text">Departs</div>
+    <div id="departs-rem" class="departs-rem"></div>
+  </div>
+
+</div>
+
+
+<div id="overlay" class="overlay"></div>
+
+<div id="destoverlay" class="destoverlay">
+  <div>
+    <label for="destination">Destination:</label>
+    <input type="text" id="destination" name="destination"/>
+  </div>
+</div>
+
+<div id="departureoverlay" class="departureoverlay">
+  <div>
+    <div>Leaving at:</div>
+    <input id="departure-time" type="time" value="" onchange="timePassed(this.value)"/>
+  </div>
+</div>
+
+<div id="listoverlay" class="listoverlay">
+  <div>
+    <div>Todo Items:</label>
+    <textarea class="items" id="items" wrap="soft" oninput="listPassed(this.value)"></textarea>
+    <div class="iteminstructions">
+      List the todo items separated by a comma.
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+<script src="script.js"></script>
