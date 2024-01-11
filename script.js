@@ -1,55 +1,49 @@
-//display departure time
-function departureTime(hourLeaving,minuteLeaving) {
-  hourLeaving = hourLeaving*1
-  minuteLeaving = minuteLeaving*1
-  
+let hourLeaving = 8;
+let minuteLeaving = 30;
 
+//display departure time
+function departureTime() {
   var now = new Date();
   var datetime = now.toLocaleString();
   let hourNow = now.getHours();
   let minuteNow = now.getMinutes();
 
-  let timeDifference = 0
-  let hourDifference = 0
-  let minuteDifference = 0
+  let timeDifference = 0;
+  let hourDifference = 0;
+  let minuteDifference = 0;
 
-  remText = "Test";
+  remText = "Signalling Failure";
 
   if (hourLeaving == hourNow) {
     if (minuteNow < minuteLeaving) {
       minuteDifference = minuteLeaving - minuteNow;
-      remText = minuteDifference + "m"
+      remText = minuteDifference + "m";
     } else if (minuteNow <= (minuteLeaving + 10)  ) {
-      remText = "Leaving Now"
+      remText = "Leaving Now";
     } else {
       minuteDifference = minuteNow - minuteLeaving;
-      remText = "+" + Math.abs(minuteDifference) + "m"
+      remText = "+" + Math.abs(minuteDifference) + "m";
     }
   } else if (hourLeaving < hourNow) {
     
     timeDifference = (24- hourNow + hourLeaving - 1)* 60 + (60-minuteNow + minuteLeaving );
 
     if (timeDifference <= 23*60) {
-      console.log("this one")
-      hourDifference = Math.trunc(timeDifference/60)
-      minuteDifference = timeDifference%60
+      hourDifference = Math.trunc(timeDifference/60);
+      minuteDifference = timeDifference%60;
       if (minuteDifference == 0) {
-        remText = hourDifference + "hr"
+        remText = hourDifference + "hr";
       } else {
-        remText = hourDifference + "hr " + minuteDifference + "m"
+        remText = hourDifference + "hr " + minuteDifference + "m";
       }
     } else {
       minuteDifference = (60-minuteLeaving + minuteNow);
-      remText = minuteDifference + "m"
+      remText = minuteDifference + "m";
     }
   }
 
-
   document.getElementById("departs-rem").innerHTML = remText;
 }
-
-//set departure time
-departureTime(7,30)
 
 //display current time
 function updateTime() {
@@ -57,9 +51,9 @@ function updateTime() {
   var datetime = now.toLocaleString();
   let hourNow = now.getHours();
   if (hourNow > 12) {
-    twelveHours = hourNow - 12
+    twelveHours = hourNow - 12;
   } else {
-    twelveHours = hourNow
+    twelveHours = hourNow;
   }
   let minuteNow = now.getMinutes();
   let secondNow = now.getSeconds();
@@ -73,9 +67,11 @@ function updateTime() {
 }
 
 setInterval(updateTime, 1000); // Run updateTime() every second
+setInterval(departureTime, 1000); // Run updateTime() every second
+
 
 // define the destination text and allow editing
-const overlay = document.querySelector('.overlay')
+const overlay = document.querySelector('.overlay');
 
 //Destination overlay
 var destination = "School"
@@ -89,20 +85,20 @@ overlayDest.value = destination
 displayDest.onclick = function() {
   var element = document.getElementById("overlay");
   element.classList.add("show");
-  var destination = document.getElementById("destoverlay")
-  destination.classList.add("show")
+  var destination = document.getElementById("destoverlay");
+  destination.classList.add("show");
 }
 
 //overlay hide
 overlay.onclick = function() {
-  displayDest.innerHTML = overlayDest.value
+  displayDest.innerHTML = overlayDest.value;
   var element = document.getElementById("overlay");
   element.classList.remove("show");
   var service = document.getElementById("destoverlay");
   service.classList.remove("show");
   var departure = document.getElementById("departureoverlay");
   departure.classList.remove("show");
-  var tasklist = document.querySelector(".listoverlay")
+  var tasklist = document.querySelector(".listoverlay");
   tasklist.classList.remove("show");
   
 }
@@ -112,9 +108,9 @@ const departure = document.querySelector("#departs-rem");
 
 departure.onclick = function() {
   var element = document.getElementById("overlay");
-  element.classList.add("show")
-  var overlaydeparture = document.getElementById("departureoverlay")
-  overlaydeparture.classList.add("show")
+  element.classList.add("show");
+  var overlaydeparture = document.getElementById("departureoverlay");
+  overlaydeparture.classList.add("show");
 }
 
 function timePassed(time) {     
@@ -126,13 +122,11 @@ function timePassed(time) {
 
 
 //Create default list
-var template = ["Breakfast","Teeth","Uniform","Lunch & Snacks","Hat","Library Books","Shoes","Sunscreen"]
-var listString = ""
-var toDo = template
+var template = ["Breakfast","Teeth","Uniform","Lunch & Snacks","Hat","Library Books","Shoes","Sunscreen"];
+var listString = "";
+var toDo = template;
 let toDoList = document.querySelector("#myList");
 let overlaytodolist = document.querySelector(".items");
-
-
 
 function createList(array) {
   toDoList.innerHTML = ""
@@ -141,22 +135,22 @@ function createList(array) {
     li.innerText = array[i];
     toDoList.appendChild(li);
   }
+
   listString = array.join(",")
   overlaytodolist.innerHTML = listString
-
 }
 
 createList(toDo);
 
 
 //Overlay for list
-const tasklist = document.querySelector(".task-list")
+const tasklist = document.querySelector(".task-list");
 
 tasklist.onclick = function() {
   var element = document.getElementById("overlay");
-  element.classList.add("show")
-  var items = document.getElementById("listoverlay")
-  items.classList.add("show")
+  element.classList.add("show");
+  var items = document.getElementById("listoverlay");
+  items.classList.add("show");
 }
 
 //accept stringlist, separate based on comma and add to toDo list, 
