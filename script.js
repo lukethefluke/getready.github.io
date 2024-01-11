@@ -9,65 +9,47 @@ function departureTime(hourLeaving,minuteLeaving) {
   let hourNow = now.getHours();
   let minuteNow = now.getMinutes();
 
-  remText = "";
-  if (hourLeaving - hourNow > 2) {
-    hourLeaving += 24
-  }
+  let timeDifference = 0
+  let hourDifference = 0
+  let minuteDifference = 0
 
-  if (hourLeaving > hourNow) {
-    if (minuteLeaving + (60 - minuteNow) > 60) {
-      remText =
-        (hourLeaving - hourNow).toString() +
-        "h " +
-        (minuteLeaving - minuteNow ).toString() +
-        "m";
-    } else if (minuteLeaving + minuteNow == 60) {
-      remText = (hourLeaving - hourNow).toString() + "h ";
-    } else { 
-      if (hourLeaving - hourNow == 1) {
-        remText = (minuteLeaving + 60 - minuteNow).toString() +
-        "m";
-      } else {
-        remText =
-        (hourLeaving - hourNow - 1).toString() +
-        "h " +
-        (minuteLeaving + 60 - minuteNow).toString() +
-        "m";
-      }
-      
-    }
-  } else if (hourLeaving == hourNow) {
-    if (minuteLeaving > minuteNow) {
-      remText = (minuteLeaving - minuteNow).toString() + "m";    
-    } else if (minuteLeaving == minuteNow) {
-      remText = "Now";
-    } else if (minuteLeaving < minuteNow) {
-      remText = "+ " + (minuteNow - minuteLeaving).toString() + "m";
-    
+  remText = "Test";
+
+  if (hourLeaving == hourNow) {
+    if (minuteNow < minuteLeaving) {
+      minuteDifference = minuteLeaving - minuteNow;
+      remText = minuteDifference + "m"
+    } else if (minuteNow <= (minuteLeaving + 10)  ) {
+      remText = "Leaving Now"
+    } else {
+      minuteDifference = minuteNow - minuteLeaving;
+      remText = "+" + Math.abs(minuteDifference) + "m"
     }
   } else if (hourLeaving < hourNow) {
-    if (minuteLeaving + minuteNow > 60) {
-      remText =
-        (hourLeaving - hourNow).toString() +
-        "h " +
-        (minuteLeaving + minuteNow - 60).toString() +
-        "m";
-    } else if (minuteLeaving + minuteNow == 60) {
-      remText = (hourLeaving - hourNow).toString() + "h ";
+    
+    timeDifference = (24- hourNow + hourLeaving - 1)* 60 + (60-minuteNow + minuteLeaving );
+
+    if (timeDifference <= 23*60) {
+      console.log("this one")
+      hourDifference = Math.trunc(timeDifference/60)
+      minuteDifference = timeDifference%60
+      if (minuteDifference == 0) {
+        remText = hourDifference + "hr"
+      } else {
+        remText = hourDifference + "hr " + minuteDifference + "m"
+      }
     } else {
-      remText =
-        (hourLeaving - hourNow - 1).toString() +
-        "h " +
-        (minuteLeaving + minuteNow).toString() +
-        "m";
+      minuteDifference = (60-minuteLeaving + minuteNow);
+      remText = minuteDifference + "m"
     }
   }
 
-document.getElementById("departs-rem").innerHTML = remText;
+
+  document.getElementById("departs-rem").innerHTML = remText;
 }
 
 //set departure time
-departureTime(10,30)
+departureTime(7,30)
 
 //display current time
 function updateTime() {
@@ -135,10 +117,10 @@ departure.onclick = function() {
   overlaydeparture.classList.add("show")
 }
 
-function timePassed(time) {                
+function timePassed(time) {     
   let[hours, mins] = time.split(":");
-  hourLeaving = hours;
-  minuteLeaving = mins;
+  hourLeaving = hours*1;
+  minuteLeaving = mins*1;
   departureTime(hours,mins);
 }
 
