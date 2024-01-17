@@ -1,3 +1,11 @@
+const queryString = window.location.search;
+const urlParams = new URLSearchParams(queryString);
+var destination = urlParams.get('destination');
+
+if(destination === " " || destination == null) {
+  destination = 'School';
+}
+
 let hourLeaving = 8;
 let minuteLeaving = 30;
 
@@ -74,7 +82,6 @@ setInterval(departureTime, 1000); // Run updateTime() every second
 const overlay = document.querySelector('.overlay');
 
 //Destination overlay
-var destination = "School"
 
 const displayDest = document.querySelector(".dest-main");
 const overlayDest = document.querySelector("#destination");
@@ -89,9 +96,12 @@ displayDest.onclick = function() {
   destination.classList.add("show");
 }
 
+
+
 //overlay hide
 overlay.onclick = function() {
-  displayDest.innerHTML = overlayDest.value;
+  destination = overlayDest.value;
+  displayDest.innerHTML = destination;
   var element = document.getElementById("overlay");
   element.classList.remove("show");
   var service = document.getElementById("destoverlay");
@@ -99,8 +109,9 @@ overlay.onclick = function() {
   var departure = document.getElementById("departureoverlay");
   departure.classList.remove("show");
   var tasklist = document.querySelector(".listoverlay");
-  tasklist.classList.remove("show");
-  
+  tasklist.classList.remove("show"); 
+
+  updateURL('destination',destination)
 }
 
 //Departure time overlay
@@ -159,6 +170,17 @@ function listPassed(stringlist) {
   var stringarray = stringlist.split(",");
   toDo = stringarray;
   createList(toDo);
+}
+
+function updateURL(key,value) {
+  const urlString = window.location;
+  const url = new URL(urlString);
+
+  url.searchParams.set(key, value);
+
+  window.location = url
+
+  console.log(`${url}`)
 }
 
 
