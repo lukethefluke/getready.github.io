@@ -43,10 +43,25 @@ function departureTime() {
         remText = hourDifference + "hr";
       } else {
         remText = hourDifference + "hr " + minuteDifference + "m";
-      }
+      } 
     } else {
       minuteDifference = (60-minuteLeaving + minuteNow);
       remText = minuteDifference + "m";
+    }
+  } else if (hourLeaving > hourNow + 1) {
+    console.log("hourleaving > hournow")
+
+    minuteDifference = minuteLeaving + (60 - minuteNow)
+    if (minuteDifference > 60) {
+      hourDifference = hourLeaving - hourNow;
+      minuteDifference = minuteDifference - 60;
+      remText = hourDifference + "hr " + minuteDifference + "m";
+    } else if (minuteDifference == 60) {
+      hourDifference = hourLeaving - hourNow;
+      remText = hourDifference + "hr "
+    } else if (minuteDifference < 60) {
+      hourDifference = hourLeaving - hourNow - 1;
+      remText = hourDifference + "hr " + minuteDifference + "m";
     }
   }
 
@@ -128,7 +143,7 @@ function timePassed(time) {
   let[hours, mins] = time.split(":");
   hourLeaving = hours*1;
   minuteLeaving = mins*1;
-  departureTime(hours,mins);
+  departureTime();
 }
 
 
