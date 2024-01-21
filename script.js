@@ -1,13 +1,25 @@
 const queryString = window.location.search;
 const urlParams = new URLSearchParams(queryString);
-var destination = urlParams.get('destination');
+let destination = urlParams.get('destination');
+let hourLeaving = urlParams.get('hour')*1;
 
-if(destination === " " || destination == null) {
+let minuteLeaving = urlParams.get('minute')*1;
+
+
+if(destination == "" || destination == null) {
   destination = 'School';
 }
+if(hourLeaving == "" || hourLeaving == null) {
+  hourLeaving = 8;
+  console.log(hourLeaving)
+}
+if(minuteLeaving == "" || minuteLeaving == null) {
+  minuteLeaving = 30;
+}
 
-let hourLeaving = 8;
-let minuteLeaving = 30;
+//set url parameter or default departure time
+departureTime()
+
 
 //display departure time
 function departureTime() {
@@ -16,56 +28,41 @@ function departureTime() {
   let hourNow = now.getHours();
   let minuteNow = now.getMinutes();
 
-  let timeDifference = 0;
-  let hourDifference = 0;
-  let minuteDifference = 0;
+  let remText = "Signalling Failure";
 
-  remText = "Signalling Failure";
+  let minutesLeaving = hourLeaving*60 + minuteLeaving;
+  let minutesNow = hourNow*60 + minuteNow;
 
-  if (hourLeaving == hourNow) {
-    if (minuteNow < minuteLeaving) {
-      minuteDifference = minuteLeaving - minuteNow;
-      remText = minuteDifference + "m";
-    } else if (minuteNow <= (minuteLeaving + 10)  ) {
-      remText = "Leaving Now";
-    } else {
-      minuteDifference = minuteNow - minuteLeaving;
-      remText = "+" + Math.abs(minuteDifference) + "m";
-    }
-  } else if (hourLeaving < hourNow) {
-    
-    timeDifference = (24- hourNow + hourLeaving - 1)* 60 + (60-minuteNow + minuteLeaving );
+  let minutesDifference = minutesLeaving - minutesNow;
 
-    if (timeDifference <= 23*60) {
-      hourDifference = Math.trunc(timeDifference/60);
-      minuteDifference = timeDifference%60;
-      if (minuteDifference == 0) {
-        remText = hourDifference + "hr";
-      } else {
-        remText = hourDifference + "hr " + minuteDifference + "m";
-      } 
-    } else {
-      minuteDifference = (60-minuteLeaving + minuteNow);
-      remText = minuteDifference + "m";
-    }
-  } else if (hourLeaving > hourNow + 1) {
-    console.log("hourleaving > hournow")
-
-    minuteDifference = minuteLeaving + (60 - minuteNow)
-    if (minuteDifference > 60) {
-      hourDifference = hourLeaving - hourNow;
-      minuteDifference = minuteDifference - 60;
-      remText = hourDifference + "hr " + minuteDifference + "m";
-    } else if (minuteDifference == 60) {
-      hourDifference = hourLeaving - hourNow;
-      remText = hourDifference + "hr "
-    } else if (minuteDifference < 60) {
-      hourDifference = hourLeaving - hourNow - 1;
-      remText = hourDifference + "hr " + minuteDifference + "m";
-    }
+  if (minutesDifference < 0) {
+    minutesDifference = minutesDifference + 24*60;
   }
 
+  if (minutesDifference > 23*60) {
+    let minuteDifference = 24*60 - minutesDifference;
+    remText = "+" + minuteDifference + "m"
+    updateURL('hour',String(hourLeaving))
+  updateURL('minute',String(minuteLeaving))
+  } else if (minutesDifference == 0 || minutesDifference == 24*60) {
+    remText = "Leaving Now"
+  } else {
+    let hourDifference = Math.floor(minutesDifference/60)
+
+    let minuteDifference = minutesDifference % 60;
+ 
+    remText = hourDifference + "hr " + minuteDifference + "m"
+  }
+
+
+
+
   document.getElementById("departs-rem").innerHTML = remText;
+
+  
+
+
+
 }
 
 //display current time
@@ -90,7 +87,7 @@ function updateTime() {
 }
 
 setInterval(updateTime, 1000); // Run updateTime() every second
-setInterval(departureTime, 1000); // Run updateTime() every second
+//setInterval(departureTime, 1000); // Run updateTime() every second
 
 
 // define the destination text and allow editing
@@ -126,7 +123,18 @@ overlay.onclick = function() {
   var tasklist = document.querySelector(".listoverlay");
   tasklist.classList.remove("show"); 
 
-  updateURL('destination',destination)
+  const parameters = {
+    hour: hourLeaving,
+    minute: minuteLeaving,
+    destination: destination
+  }
+
+  console.log(parameters);
+
+  updateURL(parameters);
+  
+  //updateURL('destination',destination)
+  
 }
 
 //Departure time overlay
@@ -187,15 +195,21 @@ function listPassed(stringlist) {
   createList(toDo);
 }
 
-function updateURL(key,value) {
+function updateURL(parameters) {
   const urlString = window.location;
   const url = new URL(urlString);
 
-  url.searchParams.set(key, value);
+  // add parameters
+  const newParams = parameters;
+  Object.keys(newParams).forEach(key => {
+    url.searchParams.set(key, newParams[key]);
+  });
 
   window.location = url
 
   console.log(`${url}`)
 }
 
-
+//todo
+//default departure time based on hourLeaving/minuteLeaving
+//move hourLeaving/minuteLeaving to global dictionary 
