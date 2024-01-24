@@ -2,7 +2,6 @@ const queryString = window.location.search;
 const urlParams = new URLSearchParams(queryString);
 let destination = urlParams.get('destination');
 let hourLeaving = urlParams.get('hour')*1;
-
 let minuteLeaving = urlParams.get('minute')*1;
 
 
@@ -10,12 +9,35 @@ if(destination == "" || destination == null) {
   destination = 'School';
 }
 if(hourLeaving == "" || hourLeaving == null) {
-  hourLeaving = 8;
+  hourLeaving = 10;
   console.log(hourLeaving)
 }
 if(minuteLeaving == "" || minuteLeaving == null) {
   minuteLeaving = 30;
 }
+
+//set time picker from default or url parameter
+
+let hourString = ""
+let minuteString = ""
+
+
+if (hourLeaving < 10) {
+  hourString = "0" + String(hourLeaving)
+} else {
+  hourString = String(hourLeaving)
+}
+if (minuteLeaving < 10) {
+  minuteString = "0" + String(minuteLeaving)
+} else {
+  minuteString = String(minuteLeaving)
+}
+
+let timeString = hourString + ":" + minuteString;
+
+document.getElementById("departure-time").value = timeString;
+//console.log(document.getElementById("departure-time").value);
+
 
 //set url parameter or default departure time
 departureTime()
@@ -53,16 +75,7 @@ function departureTime() {
  
     remText = hourDifference + "hr " + minuteDifference + "m"
   }
-
-
-
-
   document.getElementById("departs-rem").innerHTML = remText;
-
-  
-
-
-
 }
 
 //display current time
@@ -147,7 +160,7 @@ departure.onclick = function() {
   overlaydeparture.classList.add("show");
 }
 
-function timePassed(time) {     
+function timePassed(time) {    
   let[hours, mins] = time.split(":");
   hourLeaving = hours*1;
   minuteLeaving = mins*1;
