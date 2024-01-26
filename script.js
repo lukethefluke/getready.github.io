@@ -3,6 +3,7 @@ const urlParams = new URLSearchParams(queryString);
 let destination = urlParams.get('destination');
 let hourLeaving = urlParams.get('hour')*1;
 let minuteLeaving = urlParams.get('minute')*1;
+let listParams = urlParams.get('list');
 
 
 if(destination == "" || destination == null) {
@@ -10,10 +11,13 @@ if(destination == "" || destination == null) {
 }
 if(hourLeaving == "" || hourLeaving == null) {
   hourLeaving = 10;
-  console.log(hourLeaving)
 }
 if(minuteLeaving == "" || minuteLeaving == null) {
   minuteLeaving = 30;
+}
+
+if(listParams == "" || listParams == null) {
+  listParams = "Breakfast,Teeth,Uniform,Lunch & Snacks,Hat,Library Books,Shoes,Sunscreen";
 }
 
 //set time picker from default or url parameter
@@ -45,15 +49,15 @@ departureTime()
 
 //display departure time
 function departureTime() {
-  var now = new Date();
-  var datetime = now.toLocaleString();
-  let hourNow = now.getHours();
-  let minuteNow = now.getMinutes();
+  const now = new Date();
+  const datetime = now.toLocaleString();
+  const hourNow = now.getHours();
+  const minuteNow = now.getMinutes();
 
   let remText = "Signalling Failure";
 
-  let minutesLeaving = hourLeaving*60 + minuteLeaving;
-  let minutesNow = hourNow*60 + minuteNow;
+  const minutesLeaving = hourLeaving*60 + minuteLeaving;
+  const minutesNow = hourNow*60 + minuteNow;
 
   let minutesDifference = minutesLeaving - minutesNow;
 
@@ -62,16 +66,16 @@ function departureTime() {
   }
 
   if (minutesDifference > 23*60) {
-    let minuteDifference = 24*60 - minutesDifference;
+    const minuteDifference = 24*60 - minutesDifference;
     remText = "+" + minuteDifference + "m"
     updateURL('hour',String(hourLeaving))
-  updateURL('minute',String(minuteLeaving))
+    updateURL('minute',String(minuteLeaving))
   } else if (minutesDifference == 0 || minutesDifference == 24*60) {
     remText = "Leaving Now"
   } else {
-    let hourDifference = Math.floor(minutesDifference/60)
+    const hourDifference = Math.floor(minutesDifference/60)
 
-    let minuteDifference = minutesDifference % 60;
+    const minuteDifference = minutesDifference % 60;
  
     remText = hourDifference + "hr " + minuteDifference + "m"
   }
@@ -80,16 +84,16 @@ function departureTime() {
 
 //display current time
 function updateTime() {
-  var now = new Date();
-  var datetime = now.toLocaleString();
-  let hourNow = now.getHours();
+  const now = new Date();
+  const datetime = now.toLocaleString();
+  const hourNow = now.getHours();
   if (hourNow > 12) {
     twelveHours = hourNow - 12;
   } else {
     twelveHours = hourNow;
   }
-  let minuteNow = now.getMinutes();
-  let secondNow = now.getSeconds();
+  const minuteNow = now.getMinutes();
+  const secondNow = now.getSeconds();
   // Insert date and time into HTML
   document.getElementById("datetime").innerHTML =
     twelveHours.toString() +
@@ -115,9 +119,9 @@ displayDest.innerHTML = destination
 overlayDest.value = destination
 
 displayDest.onclick = function() {
-  var element = document.getElementById("overlay");
+  const element = document.getElementById("overlay");
   element.classList.add("show");
-  var destination = document.getElementById("destoverlay");
+  const destination = document.getElementById("destoverlay");
   destination.classList.add("show");
 }
 
@@ -127,22 +131,25 @@ displayDest.onclick = function() {
 overlay.onclick = function() {
   destination = overlayDest.value;
   displayDest.innerHTML = destination;
-  var element = document.getElementById("overlay");
+  const element = document.getElementById("overlay");
   element.classList.remove("show");
-  var service = document.getElementById("destoverlay");
+  const service = document.getElementById("destoverlay");
   service.classList.remove("show");
-  var departure = document.getElementById("departureoverlay");
+  const departure = document.getElementById("departureoverlay");
   departure.classList.remove("show");
-  var tasklist = document.querySelector(".listoverlay");
+  const tasklist = document.querySelector(".listoverlay");
   tasklist.classList.remove("show"); 
 
-  const parameters = {
+
+  let parameters = {
     hour: hourLeaving,
     minute: minuteLeaving,
-    destination: destination
-  }
+    destination: destination,
+    list: listParams
+  } 
 
-  console.log(parameters);
+
+
 
   updateURL(parameters);
   
@@ -154,9 +161,9 @@ overlay.onclick = function() {
 const departure = document.querySelector("#departs-rem");
 
 departure.onclick = function() {
-  var element = document.getElementById("overlay");
+  const element = document.getElementById("overlay");
   element.classList.add("show");
-  var overlaydeparture = document.getElementById("departureoverlay");
+  const overlaydeparture = document.getElementById("departureoverlay");
   overlaydeparture.classList.add("show");
 }
 
@@ -167,45 +174,45 @@ function timePassed(time) {
   departureTime();
 }
 
+function sendList(stringList) {
+  listParams = stringList
+  console.log(listParams)
+}
+
 
 //Create default list
-var template = ["Breakfast","Teeth","Uniform","Lunch & Snacks","Hat","Library Books","Shoes","Sunscreen"];
-var listString = "";
-var toDo = template;
-let toDoList = document.querySelector("#myList");
-let overlaytodolist = document.querySelector(".items");
 
-function createList(array) {
+function createList() {
+  let toDo = listParams.split(",")
+  let toDoList = document.querySelector("#myList");
+  let overlaytodolist = document.querySelector(".items");
   toDoList.innerHTML = ""
-  for (i=0; i < array.length; i++) {
+  for (i=0; i < toDo.length; i++) {
     let li = document.createElement('li');
-    li.innerText = array[i];
+    li.innerText = toDo[i];
     toDoList.appendChild(li);
   }
 
-  listString = array.join(",")
-  overlaytodolist.innerHTML = listString
+  overlaytodolist.innerHTML = listParams
 }
 
-createList(toDo);
+createList();
 
 
 //Overlay for list
 const tasklist = document.querySelector(".task-list");
 
 tasklist.onclick = function() {
-  var element = document.getElementById("overlay");
+  const element = document.getElementById("overlay");
   element.classList.add("show");
-  var items = document.getElementById("listoverlay");
+  const items = document.getElementById("listoverlay");
   items.classList.add("show");
 }
 
 //accept stringlist, separate based on comma and add to toDo list, 
 //then display on screen and overlay innerHTML
-function listPassed(stringlist) {
-  var stringarray = stringlist.split(",");
-  toDo = stringarray;
-  createList(toDo);
+function listPassed(stringList) {
+  listParams = stringList;
 }
 
 function updateURL(parameters) {
