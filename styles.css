@@ -197,12 +197,12 @@ li {
 
 .trans-info div {
   background-color: black;
-  width: 4em;
+  width: 6em;
   color: white;
   font-size: var(--small-font-size);
   padding: 0.2em;
   margin: 0em 0.2em;
-  
+  text-align: center;
 }
 
 .departs-info {
