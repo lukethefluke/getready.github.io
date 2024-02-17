@@ -104,7 +104,7 @@ function updateTime() {
 }
 
 setInterval(updateTime, 1000); // Run updateTime() every second
-//setInterval(departureTime, 1000); // Run updateTime() every second
+setInterval(departureTime, 1000); // Run updateTime() every second
 
 
 // define the destination text and allow editing
