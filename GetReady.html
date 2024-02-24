@@ -34,7 +34,7 @@
     </div>
     <div class="dest-text">
       <div class="dest-main" id="destmain"></div>
-      <div class="dest-via">via Car</div>
+      <div id="dest-via" class="dest-via"></div>
     </div>
   </div>
 </div>
@@ -75,10 +75,17 @@
   </div>
 </div>
 
+<div id="viaoverlay" class="destoverlay">
+  <div>
+    <label for="via">Traveling via:</label>
+    <input type="text" id="viaOverlayText" name="via" onkeyup="updateVia(this.value)"/>
+  </div>
+</div>
+
 <div id="departureoverlay" class="departureoverlay">
   <div>
     <div>Leaving at:</div>
-    <input id="departure-time" type="time" value="09:10" min="00:00" max="23:59" onchange="updateDepartureTime(this.value)"/>
+    <input id="departure-time" type="time" min="00:00" max="23:59" onchange="updateDepartureTime(this.value)"/>
   </div>
 </div>
 

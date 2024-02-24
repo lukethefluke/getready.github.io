@@ -10,6 +10,7 @@ parameters.set("destination", urlParams.get('destination'));
 parameters.set("hour", urlParams.get('hour'));
 parameters.set("minute", urlParams.get('minute'));
 parameters.set("list", urlParams.get('list'));
+parameters.set("via",urlParams.get('via'))
 
 //If parameters values are non-existent, then add defaults.
 function parameterDefaults(value,key) {
@@ -27,6 +28,9 @@ function parameterDefaults(value,key) {
       case "list":
         parameters.set("list","Breakfast,Teeth,Uniform,Lunch & Snacks,Hat,Library Books,Shoes,Sunscreen");
         break;
+      case "via":
+        parameters.set("via","via car");
+        break;
     }
   } 
 }
@@ -40,11 +44,20 @@ const overlayDest = document.getElementById("destOverlayText");
 mainDest.innerHTML = parameters.get("destination");
 overlayDest.value = parameters.get("destination");
 
+//DIsplay via parameter on load
+const mainVia = document.getElementById("dest-via");
+const overlayVia = document.getElementById("viaOverlayText");
+mainVia.innerHTML = "via " +parameters.get("via");
+overlayVia.value = parameters.get("via");
+
 //Display list on load
 createList()
 let overlaytodolist = document.querySelector(".items");
 overlaytodolist.innerHTML = parameters.get("list")
 
+//overlay time value from parameters
+const departureValue = document.getElementById("departure-time");
+departureValue.value = parameters.get("hour") + ":" + parameters.get("minute");
 
 //Update and display current time
 function updateTime() {
@@ -157,7 +170,6 @@ function departureDisplay() {
       textRem = "+" + departureMinutes + "m";
     }
   }
-  //console.log(departureInfo.get("Guide"));
 
   departsRem.innerHTML = textRem;
 }
@@ -181,6 +193,14 @@ mainDest.onclick = function() {
   destination.classList.add("show");
 }
 
+//Clicking on via will load the Via overlay
+mainVia.onclick = function() {
+  const element = document.getElementById("overlay");
+  element.classList.add("show");
+  const destination = document.getElementById("viaoverlay");
+  destination.classList.add("show");
+}
+
 //Departure time overlay
 const departure = document.querySelector("#departure-rem");
 departure.onclick = function() {
@@ -189,8 +209,6 @@ departure.onclick = function() {
   const overlaydeparture = document.getElementById("departureoverlay");
   overlaydeparture.classList.add("show");
 }
-
-
 
 //overlay hide will update URL and the page will reload with the new parameters
 overlay.onclick = function() { 
@@ -205,6 +223,9 @@ overlay.onclick = function() {
   const items = document.getElementById("listoverlay");
   items.classList.remove("show");
 
+  const via = document.getElementById("viaoverlay");
+  via.classList.remove("show");
+
   //updates URL and triggers page refresh
   updateURL(parameters);
 }
@@ -216,12 +237,19 @@ function updateDestination(destination) {
   parameters.set("destination",destination);
 }
 
+//update via when text is changed
+function updateVia(via) {
+  let newVia = document.getElementById("dest-via");
+  newVia.innerHTML = "via " + via;
+  parameters.set("via",via);
+}
+
 //Create list from parameters
 function createList() {
-  let toDo = parameters.get("list").split(",")
+  let toDo = parameters.get("list").split(",");
   let toDoList = document.querySelector("#myList");
   let overlaytodolist = document.querySelector(".items");
-  toDoList.innerHTML = ""
+  toDoList.innerHTML = "";
   for (i=0; i < toDo.length; i++) {
     let li = document.createElement('li');
     li.innerText = toDo[i];
@@ -232,7 +260,6 @@ function createList() {
 //update the list
 function updateList(value) {
   parameters.set("list",value);
-  console.log(parameters.get("list"));
 }
 
 //Overlay for list appears on click
@@ -247,9 +274,8 @@ tasklist.onclick = function() {
 function updateDepartureTime() {
   let newDepartureTime = document.getElementById("departure-time").value;
   let newDepartureTimes = newDepartureTime.split(":");
-  parameters.set("hour",newDepartureTimes[0])
-  parameters.set("minute",newDepartureTimes[1])
-  console.log(parameters);  
+  parameters.set("hour",newDepartureTimes[0]);
+  parameters.set("minute",newDepartureTimes[1]);
 }
 
 //define the url
