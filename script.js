@@ -16,13 +16,13 @@ function parameterDefaults(value,key) {
   if (value == "" || value == null) {
     switch(key) {     
       case "destination":
-        parameters.set("destination","school");
+        parameters.set("destination","School");
         break;
       case "hour":
         parameters.set("hour","09");
         break;
       case "minute":
-        parameters.set("minute","10");
+        parameters.set("minute","00");
         break;
       case "list":
         parameters.set("list","Breakfast,Teeth,Uniform,Lunch & Snacks,Hat,Library Books,Shoes,Sunscreen");
@@ -31,13 +31,20 @@ function parameterDefaults(value,key) {
   } 
 }
 
-//run parameterDefaults to set URL parameters as default. The page will effectively reload the first time it is opened
+//run parameterDefaults to set URL parameters as default. 
 parameters.forEach(parameterDefaults);
 
 //Display destination parameter on load
-const displayDest = document.querySelector(".dest-main");
-const overlayDest = document.querySelector("#destination");
-displayDest.innerHTML = parameters.get("destination");
+const mainDest = document.getElementById("destmain");
+const overlayDest = document.getElementById("destOverlayText");
+mainDest.innerHTML = parameters.get("destination");
+overlayDest.value = parameters.get("destination");
+
+//Display list on load
+createList()
+let overlaytodolist = document.querySelector(".items");
+overlaytodolist.innerHTML = parameters.get("list")
+
 
 //Update and display current time
 function updateTime() {
@@ -87,11 +94,8 @@ function getRem(hourLeaving,minuteLeaving) {
   totalMinutesDifference = String(totalMinutesDifference*1 + 24*60);
   }
 
-  remainingTime.set("totalMinutesDifference", Math.abs(totalMinutesDifference));
-  //console.log(remainingTime)  
+  remainingTime.set("totalMinutesDifference", Math.abs(totalMinutesDifference)); 
 }
-
-
 
 //departureInfo contains leaving information that will be modified and displayed by function departureDisplay
 let departureInfo = new Map();
@@ -136,7 +140,7 @@ function departureDisplay() {
   let departureMinutes = departureInfo.get("departureMinutes");
 
   let textRem = "";
-  console.log(departureInfo.get("departureHours"));
+  
 
   //Display departsRem propery
   if (!isNaN(departureInfo.get("departureHours")*1)) {
@@ -161,25 +165,20 @@ function departureDisplay() {
 //Run updateTime and departureTime every second
 
 setInterval(updateTime, 1000); // Run updateTime() every second
-// // Get Remaining time info
-//setInterval(displayRem(remainingTime.get("totalMinutesDifference")), 1000); // Get RemDisplay info
-//setInterval(, 1000); // Display Rem info
+// //Get Remaining time info
+setInterval(displayRem(remainingTime.get("totalMinutesDifference")), 1000); // Get RemDisplay info
+setInterval(departureDisplay, 1000); // Display Rem info
 
 
 // define the destination text and allow editing
 const overlay = document.querySelector('.overlay');
 
 //Clicking on destination will load the Destination overlay
-displayDest.onclick = function() {
+mainDest.onclick = function() {
   const element = document.getElementById("overlay");
   element.classList.add("show");
   const destination = document.getElementById("destoverlay");
   destination.classList.add("show");
-}
-
-//overlay hide will update URL and the page will reload with the new parameters
-overlay.onclick = function() { 
-  updateURL(parameters);
 }
 
 //Departure time overlay
@@ -191,15 +190,35 @@ departure.onclick = function() {
   overlaydeparture.classList.add("show");
 }
 
-function sendList(stringList) {
-  listParams = stringList
+
+
+//overlay hide will update URL and the page will reload with the new parameters
+overlay.onclick = function() { 
+  const element = document.getElementById("overlay");
+  element.classList.remove("show");
+  const overlaydeparture = document.getElementById("departureoverlay");
+  overlaydeparture.classList.remove("show");
+
+  const destination = document.getElementById("destoverlay");
+  destination.classList.remove("show");
+
+  const items = document.getElementById("listoverlay");
+  items.classList.remove("show");
+
+  //updates URL and triggers page refresh
+  updateURL(parameters);
 }
 
+//update the destination when text is changed
+function updateDestination(destination) {
+  let newDestination = document.getElementById("destmain");
+  newDestination.innerHTML = destination;
+  parameters.set("destination",destination);
+}
 
 //Create list from parameters
-
 function createList() {
-  let toDo = listParams.split(",")
+  let toDo = parameters.get("list").split(",")
   let toDoList = document.querySelector("#myList");
   let overlaytodolist = document.querySelector(".items");
   toDoList.innerHTML = ""
@@ -208,9 +227,13 @@ function createList() {
     li.innerText = toDo[i];
     toDoList.appendChild(li);
   }
-  overlaytodolist.innerHTML = listParams
 }
 
+//update the list
+function updateList(value) {
+  parameters.set("list",value);
+  console.log(parameters.get("list"));
+}
 
 //Overlay for list appears on click
 const tasklist = document.querySelector(".task-list");
@@ -221,15 +244,25 @@ tasklist.onclick = function() {
   items.classList.add("show");
 }
 
-//update the URL. THis will cause the page to reload
-function updateURL(parameters) {
-  const urlString = window.location;
-  const url = new URL(urlString);
+function updateDepartureTime() {
+  let newDepartureTime = document.getElementById("departure-time").value;
+  let newDepartureTimes = newDepartureTime.split(":");
+  parameters.set("hour",newDepartureTimes[0])
+  parameters.set("minute",newDepartureTimes[1])
+  console.log(parameters);  
+}
 
-  // add parameters
-  const newParams = parameters;
-  Object.keys(newParams).forEach(key => {
-    url.searchParams.set(key, newParams[key]);
-  });
+//define the url
+const urlString = window.location;
+const url = new URL(urlString);
+
+//updates the url and refreshes the page with the new parameters
+function updateURL() {
+  parameters.forEach(addParameters);
   window.location = url
+}
+
+//adds any given paramater to the url
+function addParameters(value,key) {
+  url.searchParams.set(key, value);
 }
