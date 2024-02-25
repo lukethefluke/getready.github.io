@@ -29,7 +29,7 @@ function parameterDefaults(value,key) {
         parameters.set("list","Breakfast,Teeth,Uniform,Lunch & Snacks,Hat,Library Books,Shoes,Sunscreen");
         break;
       case "via":
-        parameters.set("via","via car");
+        parameters.set("via","car");
         break;
     }
   } 
@@ -116,10 +116,10 @@ let departureInfo = new Map();
 //displayRem will return a string of the remaining time information (new Departure Time)
 function displayRem(remainingMinutes) {
 
+  
   const now = new Date();
   const hourNow = now.getHours();
   const minuteNow = now.getMinutes();
-
 
   if (remainingTime.get("Delay") == "DepartingNow") {
     departureInfo.set("Guide","Departing");
@@ -127,17 +127,17 @@ function displayRem(remainingMinutes) {
     departureInfo.set("departureMinutes","");
   } else if (remainingTime.get("Delay") == "Departing") {
     departureInfo.set("Guide","Departing");
-    departureInfo.set("departureHours",String(Math.round(remainingMinutes/60)));
+    departureInfo.set("departureHours",String(Math.trunc((remainingMinutes*1)/60)));
     departureInfo.set("departureMinutes",String(Math.round(remainingMinutes%60)));
   } else if (remainingTime.get("Delay") == "Delay") {
     if (remainingTime > 59 ) {
       remainingTime = 24*60 - remainingTime;
       departureInfo.set("Guide","Departing");
-      departureInfo.set("departureHours",toString(Math.round(remainingMinutes/60)));
+      departureInfo.set("departureHours",toString(Math.trunc((remainingMinutes*1)/60));
       departureInfo.set("departureMinutes",toString(Math.round(remainingMinutes%60)));
     } else {
       departureInfo.set("Guide","Delayed");
-      departureInfo.set("departureHours",toString(Math.round(remainingMinutes/60)));
+      departureInfo.set("departureHours",toString(Math.trunc((remainingMinutes*1)/60));
       departureInfo.set("departureMinutes",toString(Math.round(remainingMinutes%60)));
     }
   }
