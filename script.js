@@ -133,11 +133,11 @@ function displayRem(remainingMinutes) {
     if (remainingTime > 59 ) {
       remainingTime = 24*60 - remainingTime;
       departureInfo.set("Guide","Departing");
-      departureInfo.set("departureHours",toString(Math.trunc((remainingMinutes*1)/60));
+      departureInfo.set("departureHours",toString(Math.trunc((remainingMinutes*1)/60)));
       departureInfo.set("departureMinutes",toString(Math.round(remainingMinutes%60)));
     } else {
       departureInfo.set("Guide","Delayed");
-      departureInfo.set("departureHours",toString(Math.trunc((remainingMinutes*1)/60));
+      departureInfo.set("departureHours",toString(Math.trunc((remainingMinutes*1)/60)));
       departureInfo.set("departureMinutes",toString(Math.round(remainingMinutes%60)));
     }
   }
